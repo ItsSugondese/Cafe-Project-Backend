@@ -9,7 +9,17 @@ namespace BisleriumCafeBackend.constants
             [Description("login")]
             LOGIN_DETAILS,
             [Description("add-in")]
-            ADD_IN
+            ADD_IN,
+            [Description("coffee")]
+            COFFEE,
+            [Description("member")]
+            MEMBER,
+            [Description("order")]
+            ORDER,
+            [Description("coffee-redeem")]
+            COFFEE_REDEEM,
+            [Description("order-add-in")]
+            ORDER_ADD_IN
         }
 
 

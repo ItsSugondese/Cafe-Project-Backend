@@ -1,4 +1,6 @@
-﻿using BisleriumCafeBackend.Model.AddIn;
+﻿using BisleriumCafeBackend.constants;
+using BisleriumCafeBackend.Generics.Controller;
+using BisleriumCafeBackend.Model.AddIn;
 using BisleriumCafeBackend.Services.AddInServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,47 +10,51 @@ namespace BisleriumCafeBackend.Controllers.AddInController
 {
     [Route("api/addin")]
     [ApiController]
-    public class AddInController : ControllerBase
+    public class AddInController : GenericController
     {
 
         private readonly IAddInService _addInService;
+        private string moduleName;
 
         public AddInController(IAddInService addInService)
         {
-            _addInService = addInService;
+           _addInService = addInService;
+            moduleName = ModuleNameConstants.ADDIN;
         }
 
         // GET: api/<AddInController>
         [HttpGet]
-        public List<AddIn> Get()
+        public Object Get()
         {
-            return _addInService.getAllAddin();
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), _addInService.getAllAddin());
+           
         }
 
         // GET api/<AddInController>/5
         [HttpGet("{id}")]
-        public AddIn Get(int id)
+        public Object Get(int id)
         {
-            return _addInService.getSingleAddin(id);
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), _addInService.getSingleAddin(id));
+             
         }
 
         // POST api/<AddInController>
         [HttpPost]
-        public void Post(AddIn addIn)
+        public Object Post(AddIn addIn)
         {
             _addInService.saveAddIn(addIn);
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.POST, moduleName), true);
         }
 
-        // PUT api/<AddInController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+
+       
 
         // DELETE api/<AddInController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public Object Delete(int id)
         {
+            _addInService.deleteAddInById(id);
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.DELETE, moduleName), true);
         }
     }
 }

@@ -1,3 +1,4 @@
+using BisleriumCafeBackend.Exceptions;
 using BisleriumCafeBackend.Repository.AddInRepo;
 using BisleriumCafeBackend.Services.AddInServices;
 using BisleriumCafeBackend.Services.Login;
@@ -23,6 +24,13 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add(typeof(CustomExceptionFilterAttribute));
+});
+
+
 var app = builder.Build();
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;

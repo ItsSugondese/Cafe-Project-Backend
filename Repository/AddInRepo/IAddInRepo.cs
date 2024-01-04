@@ -9,5 +9,7 @@ namespace BisleriumCafeBackend.Repository.AddInRepo
 
         void saveAddin(AddIn addIn);
         void updateAddin(AddIn addIn);
+
+        void deleteAddin(int id);
     }
 }

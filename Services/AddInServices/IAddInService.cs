@@ -9,5 +9,7 @@ namespace BisleriumCafeBackend.Services.AddInServices
         AddIn getSingleAddin(int id);
 
         List<AddIn> getAllAddin();
+
+        void deleteAddInById(int id);
     }
 }

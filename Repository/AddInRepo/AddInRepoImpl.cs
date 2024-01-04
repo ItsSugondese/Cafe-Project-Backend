@@ -7,13 +7,12 @@ namespace BisleriumCafeBackend.Repository.AddInRepo
 {
     public class AddInRepoImpl : IAddInRepo
     {
-
         List<Dictionary<string, object>> getFromDictionary;
         string fileName;
 
         public AddInRepoImpl() {
             fileName = FileNameEnum.GetEnumDescription((FileNameEnum.FileName.ADD_IN));
-        getFromDictionary = ExcelLoaderHelper.GetExcelService(fileName: fileName);
+            getFromDictionary = ExcelLoaderHelper.GetExcelService(fileName: fileName);
         }
 
         public void saveAddin(AddIn addIn)
@@ -39,8 +38,8 @@ namespace BisleriumCafeBackend.Repository.AddInRepo
                 // Save the changes to the Excel file
                 package.Save();
             }
-            
-            
+
+
         }
 
 
@@ -54,11 +53,11 @@ namespace BisleriumCafeBackend.Repository.AddInRepo
 
         public List<AddIn> getAll()
         {
-            
+
             return getFromDictionary.Select(e => new AddIn
             {
                 Id = Convert.ToInt32(e["Id"]),
-                Name =  (e["Name"]).ToString(),
+                Name = (e["Name"]).ToString(),
                 Price = (double)e["Price"]
             }).ToList();
         }
@@ -86,7 +85,7 @@ namespace BisleriumCafeBackend.Repository.AddInRepo
                     {
                         // Update the "Name" column for rows with "Id" equal to 2
                         worksheet.Cells[row, nameColumnIndex].Value = addIn.Name;
-                        worksheet.Cells[row, priceColumnIndex].Value = addIn.Price;
+                        worksheet.Cells[row, priceColumnIndex].Value = (double) addIn.Price;
                         break;
                     }
                 }
@@ -95,5 +94,28 @@ namespace BisleriumCafeBackend.Repository.AddInRepo
                 package.Save();
             }
         }
+
+
+            public void deleteAddin(int id)
+            {
+                List<AddIn> list = getAll();
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list[i].Id == id)
+                    {
+                    string filePath = @fileName + ".xlsx";
+                    using (var package = new ExcelPackage(new FileInfo(filePath)))
+                        {
+                            // Access the first worksheet
+                            var worksheet = package.Workbook.Worksheets[0];
+                        worksheet.DeleteRow(i+2);
+                        package.Save();
+                        break;
+                           
+                            
+                        }
+                    }
+                }
+            }
+        }
     }
-}

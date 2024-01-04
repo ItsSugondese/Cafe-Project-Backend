@@ -13,6 +13,13 @@ namespace BisleriumCafeBackend.Services.AddInServices
         public AddInServiceImpl(IAddInRepo addInRepo) {
             _addInRepo = addInRepo;
         }
+
+        public void deleteAddInById(int id)
+        {
+            errorWhenAddInNotExist(id);
+            _addInRepo.deleteAddin(id);
+        }
+
         public void saveAddIn( AddIn addIn)
         {
             List<AddIn> addInList = _addInRepo.getAll();
@@ -33,10 +40,7 @@ namespace BisleriumCafeBackend.Services.AddInServices
             }
             else
             {
-                if (_addInRepo.findById(addIn.Id ?? 0) == null)
-                {
-                    throw new Exception("AddIn with that id doesn't exists");
-                }
+                errorWhenAddInNotExist(addIn.Id ?? 0);
                 _addInRepo.updateAddin(addIn);
             }
             
@@ -49,7 +53,16 @@ namespace BisleriumCafeBackend.Services.AddInServices
 
         AddIn IAddInService.getSingleAddin(int id)
         {
+            errorWhenAddInNotExist(id);
             return _addInRepo.findById(id);
+        }
+
+        private void errorWhenAddInNotExist(int id)
+        {
+            if (_addInRepo.findById(id) == null)
+            {
+                throw new Exception("AddIn with that id doesn't exists");
+            }
         }
     }
 }
