@@ -1,16 +1,18 @@
 ﻿using BisleriumCafeBackend.Model.AddIn;
 using BisleriumCafeBackend.Model.Coffee;
 using BisleriumCafeBackend.Model.Member;
+using BisleriumCafeBackend.pojo.member;
 
 namespace BisleriumCafeBackend.Services.MemberServices
 {
     public interface IMemberService
     {
-        void saveMember(Member coffee);
+        void saveMember(MemberRequest member);
 
-        AddIn getSingleMember(int id);
+        Member? getSingleMember(int id);
+        Member? getMemberByContactNumber(string contactNumber);
 
-        List<AddIn> getAllMember();
+        List<Member> getAllMember();
 
         void deleteMemberById(int id);
     }

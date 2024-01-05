@@ -1,4 +1,5 @@
-﻿using BisleriumCafeBackend.enums;
+﻿using BisleriumCafeBackend.constants;
+using BisleriumCafeBackend.enums;
 using BisleriumCafeBackend.helper;
 using BisleriumCafeBackend.Model.AddIn;
 using BisleriumCafeBackend.Model.User;
@@ -24,7 +25,7 @@ namespace BisleriumCafeBackend.Services.AddInServices
         {
             List<AddIn> addInList = _addInRepo.getAll();
 
-
+            errorWhenAddInNameAlreadyExist(addIn);
             if (addIn.Id == null)
             {
                 if (addInList.Count() > 0)
@@ -61,7 +62,15 @@ namespace BisleriumCafeBackend.Services.AddInServices
         {
             if (_addInRepo.findById(id) == null)
             {
-                throw new Exception("AddIn with that id doesn't exists");
+                throw new Exception(MessageConstantsMerge.notExist("id", ModuleNameConstants.ADDIN));
+            }
+        }
+        private void errorWhenAddInNameAlreadyExist(AddIn addIn)
+        {
+            AddIn checkAddIn = _addInRepo.findByName(addIn.Name);
+            if (checkAddIn != null && checkAddIn.Id != addIn.Id)
+            {
+                throw new Exception(MessageConstantsMerge.alreadyExist("name", ModuleNameConstants.ADDIN));
             }
         }
     }

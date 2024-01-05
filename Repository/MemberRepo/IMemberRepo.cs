@@ -6,7 +6,8 @@ namespace BisleriumCafeBackend.Repository.MemberRepo
     public interface IMemberRepo
     {
         List<Member> getAll();
-        Coffee findById(int id);
+        Member? findById(int id);
+        Member? findByPhoneNumber(string contact);
 
         void saveMember(Member member);
         void updateMember(Member member);

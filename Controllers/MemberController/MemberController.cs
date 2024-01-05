@@ -1,6 +1,7 @@
 ﻿using BisleriumCafeBackend.constants;
 using BisleriumCafeBackend.Generics.Controller;
 using BisleriumCafeBackend.Model.Member;
+using BisleriumCafeBackend.pojo.member;
 using BisleriumCafeBackend.Services.CoffeeServices;
 using BisleriumCafeBackend.Services.MemberServices;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BisleriumCafeBackend.Controllers.MemberController
 {
-    [Route("api/[controller]")]
+    [Route("api/member")]
     [ApiController]
     public class MemberController : GenericController
     {
@@ -33,14 +34,20 @@ namespace BisleriumCafeBackend.Controllers.MemberController
 
         // GET api/<MemberController>/5
         [HttpGet("{id}")]
-        public Object Get(int id)
+        public Object GetById(int id)
         {
             return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), _memberService.getSingleMember(id));
         }
 
+        [HttpGet("contact/{contactNumber}")]
+        public Object GetByContactNumber(string contactNumber)
+        {
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), _memberService.getMemberByContactNumber(contactNumber));
+        }
+
         // POST api/<MemberController>
         [HttpPost]
-        public Object Post(Member member)
+        public Object Post(MemberRequest member)
         {
             _memberService.saveMember(member);
             return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.POST, moduleName), true);

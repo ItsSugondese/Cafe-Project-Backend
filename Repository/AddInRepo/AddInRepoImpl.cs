@@ -33,19 +33,17 @@ namespace BisleriumCafeBackend.Repository.AddInRepo
                 // Assuming 'id', 'Name', and 'Price' are variables with appropriate values
                 worksheet.Cells[newRow, 1].Value = addIn.Id;         // Assuming 'Id' is in column A
                 worksheet.Cells[newRow, 2].Value = addIn.Name;  // Assuming 'Name' is in column B
-                worksheet.Cells[newRow, 3].Value = addIn.Price; // Assuming 'Price' is in column C
+                worksheet.Cells[newRow, 3].Value = (double) addIn.Price; // Assuming 'Price' is in column C
 
                 // Save the changes to the Excel file
                 package.Save();
             }
-
-
         }
 
 
 
 
-        public AddIn findById(int id)
+        public AddIn? findById(int id)
         {
             return getAll().SingleOrDefault(addIn => addIn.Id == id);
 
@@ -110,12 +108,15 @@ namespace BisleriumCafeBackend.Repository.AddInRepo
                             var worksheet = package.Workbook.Worksheets[0];
                         worksheet.DeleteRow(i+2);
                         package.Save();
-                        break;
-                           
-                            
+                        break; 
                         }
                     }
                 }
             }
+
+        public AddIn? findByName(string name)
+        {
+            return getAll().SingleOrDefault(addIn => addIn.Name.ToUpper() == name.ToUpper());
         }
+    }
     }

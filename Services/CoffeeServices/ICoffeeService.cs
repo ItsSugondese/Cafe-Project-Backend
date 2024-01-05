@@ -7,9 +7,9 @@ namespace BisleriumCafeBackend.Services.CoffeeServices
     {
         void saveCoffee(Coffee coffee);
 
-        AddIn getSingleCoffee(int id);
+        Coffee getSingleCoffee(int id);
 
-        List<AddIn> getAllCoffee();
+        List<Coffee> getAllCoffee();
 
         void deleteCoffeeById(int id);
     }
