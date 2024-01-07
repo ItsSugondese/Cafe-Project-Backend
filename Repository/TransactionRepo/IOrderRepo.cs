@@ -7,6 +7,8 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
     public interface IOrderRepo
     {
         List<Order> getAll();
+
+        List<OrderResponse> getAllOrdersDetails();
         Order? findById(int id);
 
         void saveOrder(Order order);

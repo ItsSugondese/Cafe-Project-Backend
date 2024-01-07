@@ -49,8 +49,7 @@ namespace BisleriumCafeBackend.Controllers.MemberController
         [HttpPost]
         public Object Post(MemberRequest member)
         {
-            _memberService.saveMember(member);
-            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.POST, moduleName), true);
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.POST, moduleName), _memberService.saveMember(member));
         }
 
         // PUT api/<MemberController>/5

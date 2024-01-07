@@ -56,10 +56,9 @@ namespace BisleriumCafeBackend.Services.MemberServices
         //    }
         //}
 
-        public void saveMember(MemberRequest memberRequest)
+        public Member saveMember(MemberRequest memberRequest)
         {
             List<Member> memberList = _memberRepo.getAll();
-           
                 if (memberList.Count() > 0)
                 {
                     Member lastMember = memberList.Last();
@@ -69,15 +68,16 @@ namespace BisleriumCafeBackend.Services.MemberServices
                 {
                     memberRequest.Id = 1;
                 }
-
-            _memberRepo.saveMember(new Member
-            {
-                CoffeeCount = 0,
-                Id = memberRequest.Id,
-                IsMember = false,
-                Name = memberRequest.Name,
-                PhoneNumber = memberRequest.PhoneNumber
-            });
+                Member member = new Member
+                {
+                    CoffeeCount = 0,
+                    Id = memberRequest.Id,
+                    IsMember = false,
+                    Name = memberRequest.Name,
+                    PhoneNumber = memberRequest.PhoneNumber
+                };
+            _memberRepo.saveMember(member);
+            return member;
          }
         
 

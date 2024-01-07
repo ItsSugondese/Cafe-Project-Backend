@@ -19,7 +19,11 @@ namespace BisleriumCafeBackend.constants
             [Description("coffee-redeem")]
             COFFEE_REDEEM,
             [Description("order-add-in")]
-            ORDER_ADD_IN
+            ORDER_ADD_IN,
+            [Description("transaction")]
+            TRANSACTION ,
+            [Description("temporary-attachments")]
+            TEMPORARY_ATTACHMENTS
         }
 
 

@@ -1,6 +1,8 @@
 ﻿using BisleriumCafeBackend.constants;
 using BisleriumCafeBackend.helper;
+using BisleriumCafeBackend.Model.AddIn;
 using BisleriumCafeBackend.Model.Coffee;
+using BisleriumCafeBackend.Model.Member;
 using BisleriumCafeBackend.Model.Transaction;
 using BisleriumCafeBackend.pojo.order;
 using BisleriumCafeBackend.Repository.AddInRepo;
@@ -17,12 +19,14 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
         private readonly IAddInRepo _addInRepo;
         private readonly IMemberRepo _memberRepo;
         private readonly ICoffeeRepo _coffeeRepo;
+        private readonly IOrderAddInMappingRepo _orderAddInMappingRepo;
 
-        public OrderRepoImpl(IAddInRepo addInRepo, ICoffeeRepo coffeeRepo, IMemberRepo memberRepo)
+        public OrderRepoImpl(IAddInRepo addInRepo, ICoffeeRepo coffeeRepo, IMemberRepo memberRepo, IOrderAddInMappingRepo addInMappingRepo)
         {
             _addInRepo = addInRepo;
             _memberRepo = memberRepo;
             _coffeeRepo = coffeeRepo;
+            _orderAddInMappingRepo = addInMappingRepo;
 
             fileName = FileNameEnum.GetEnumDescription((FileNameEnum.FileName.ORDER));
             getFromDictionary = ExcelLoaderHelper.GetExcelService(fileName: fileName);
@@ -54,12 +58,6 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
 
         public List<Order> getAll()
         {
-            //getFromDictionary.Select(e =>
-            //{
-                
-            //    return new OrderResponse(); // Replace with the actual type you want to return
-            //}).ToList();
-
             return getFromDictionary.Select(e => new Order
             {
                 Id = Convert.ToInt32(e["Id"]),
@@ -70,7 +68,9 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
                 HadAddIn = Convert.ToBoolean(e["HadAddIn"]),
                 Price = (double)e["Price"],
                 CoffeeId = Convert.ToInt32(e["CoffeeId"]),
-                RedeemId = Convert.ToInt32(e["RedeemId"]),
+                RedeemId =  e["RedeemId"] == DBNull.Value? null : Convert.ToInt32(e["RedeemId"]),
+                HasPaid=   Convert.ToBoolean(e["HasPaid"])
+                
                 
             }).ToList();
         }
@@ -100,6 +100,7 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
                 worksheet.Cells[newRow, 7].Value = order.CoffeeId; // Assuming 'Price' is in column C
                 worksheet.Cells[newRow, 8].Value = order.HadAddIn; // Assuming 'Price' is in column C
                 worksheet.Cells[newRow, 9].Value = order.RedeemId; // Assuming 'Price' is in column C
+                worksheet.Cells[newRow, 10].Value = order.HasPaid; // Assuming 'Price' is in column C
 
                 // Save the changes to the Excel file
                 package.Save();
@@ -117,8 +118,7 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
 
                 // Determine the last used row
                 int idColumnIndex = 1; // Assuming "Id" is in the first column
-                int nameColumnIndex = 2; // Assuming "Name" is in the third column
-                int priceColumnIndex = 3; // Assuming "Name" is in the third column
+     
 
                 // Iterate through rows and update "Name" where "Id" is 2
                 for (int newRow = worksheet.Dimension.Start.Row + 1; newRow <= worksheet.Dimension.End.Row; newRow++)
@@ -136,6 +136,7 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
                         worksheet.Cells[newRow, 7].Value = order.CoffeeId; // Assuming 'Price' is in column C
                         worksheet.Cells[newRow, 8].Value = order.HadAddIn; // Assuming 'Price' is in column C
                         worksheet.Cells[newRow, 9].Value = order.RedeemId;
+                        worksheet.Cells[newRow, 10].Value = order.HasPaid;
                         break;
                     }
                 }
@@ -144,5 +145,26 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
                 package.Save();
             }
         }
+
+        public List<OrderResponse> getAllOrdersDetails()
+        {
+           return getAll().Where(filter => !filter.HasPaid).Select(
+                (e) => {
+                    List<string> addInsName = _orderAddInMappingRepo.findByOrderId((int)e.Id)
+                    .Select(e => _addInRepo.findById(e.AddInId).Name).ToList();
+                    Member member = _memberRepo.findById(e.MemberId);
+                    return new OrderResponse
+                    {
+                        Id = (int)e.Id,
+                        Date = e.Date,
+                        AddInName = addInsName,
+                        CoffeeName = _coffeeRepo.findById(e.CoffeeId).Name,
+                        MemberName = member.Name,
+                        Price = e.Price,
+                        MemberId = (int) member.Id
+                    };
+                }
+                ).ToList();
+            }
+        }
     }
-}

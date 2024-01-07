@@ -1,4 +1,4 @@
-﻿namespace BisleriumCafeBackend.Services.Transaction
+﻿namespace BisleriumCafeBackend.Services.TransactionService
 {
     public class CoffeeRedeemCoupounServiceImpl : ICoffeeRedeemCoupounService
     {

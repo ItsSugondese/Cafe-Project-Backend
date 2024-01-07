@@ -7,7 +7,7 @@ namespace BisleriumCafeBackend.Services.MemberServices
 {
     public interface IMemberService
     {
-        void saveMember(MemberRequest member);
+        Member saveMember(MemberRequest member);
 
         Member? getSingleMember(int id);
         Member? getMemberByContactNumber(string contactNumber);

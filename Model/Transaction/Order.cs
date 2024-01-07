@@ -10,6 +10,12 @@
         public double Price { get; set; }
         public int CoffeeId { get; set; }
         public bool HadAddIn {  get; set; }
+        public bool HasPaid {  get; set; }
         public int? RedeemId { get; set; }
+
+        public Order()
+        {
+            Date = DateOnly.FromDateTime(DateTime.Now);
+        }
     }
 }
