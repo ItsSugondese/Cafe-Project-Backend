@@ -52,7 +52,8 @@ namespace BisleriumCafeBackend.Repository.CoffeeRepo
             {
                 Id = Convert.ToInt32(e["Id"]),
                 Name = (e["Name"]).ToString(),
-                Price = (double)e["Price"]
+                Price = (double)e["Price"],
+                FilePath = (e["FilePath"]).ToString()
             }).ToList();
         }
 
@@ -75,6 +76,7 @@ namespace BisleriumCafeBackend.Repository.CoffeeRepo
                 worksheet.Cells[newRow, 1].Value = coffee.Id;         // Assuming 'Id' is in column A
                 worksheet.Cells[newRow, 2].Value = coffee.Name;  // Assuming 'Name' is in column B
                 worksheet.Cells[newRow, 3].Value = (double)coffee.Price; // Assuming 'Price' is in column C
+                worksheet.Cells[newRow, 4].Value = coffee.FilePath; // Assuming 'Price' is in column C
 
                 // Save the changes to the Excel file
                 package.Save();
@@ -105,6 +107,7 @@ namespace BisleriumCafeBackend.Repository.CoffeeRepo
                         // Update the "Name" column for rows with "Id" equal to 2
                         worksheet.Cells[row, nameColumnIndex].Value = coffee.Name;
                         worksheet.Cells[row, priceColumnIndex].Value = (double)coffee.Price;
+                        worksheet.Cells[row, priceColumnIndex].Value = coffee.FilePath;
                         break;
                     }
                 }

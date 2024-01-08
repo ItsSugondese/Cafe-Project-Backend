@@ -1,6 +1,8 @@
 ﻿using BisleriumCafeBackend.constants;
 using BisleriumCafeBackend.Generics.Controller;
 using BisleriumCafeBackend.Model.Coffee;
+using BisleriumCafeBackend.pojo.coffee;
+using BisleriumCafeBackend.Repository.CoffeeRepo;
 using BisleriumCafeBackend.Services.AddInServices;
 using BisleriumCafeBackend.Services.CoffeeServices;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +17,12 @@ namespace BisleriumCafeBackend.Controllers.CoffeeController
     {
         private readonly ICoffeeService _coffeeService;
         private string moduleName;
+        private readonly ICoffeeRepo _coffeeRepo;
 
 
-        public CoffeeController(ICoffeeService coffeeService)
+        public CoffeeController(ICoffeeService coffeeService, ICoffeeRepo coffeeRepo)
         {
+            _coffeeRepo = coffeeRepo;
             _coffeeService = coffeeService;
             moduleName = ModuleNameConstants.COFFEE;
         }
@@ -38,9 +42,24 @@ namespace BisleriumCafeBackend.Controllers.CoffeeController
             return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), _coffeeService.getSingleCoffee(id));
         }
 
+        [HttpGet("doc/{id}")]
+        public Object GetDocs(int id)
+        {
+            string? photoPath = _coffeeRepo.findById(id)?.FilePath;
+
+            if (photoPath != null && !string.IsNullOrEmpty(photoPath))
+            {
+                //genericFileUtils.GetFileFromFilePath(photoPath, response);
+                Byte[] b = System.IO.File.ReadAllBytes(photoPath);   // You can use your own method over here.         
+                return File(b, "image/jpeg");
+            }
+   
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), true);
+        }
+
         // POST api/<CoffeeController>
         [HttpPost]
-        public Object Post(Coffee coffee)
+        public Object Post(CoffeeRequest coffee)
         {
             _coffeeService.saveCoffee(coffee);
             return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.POST, moduleName), true);

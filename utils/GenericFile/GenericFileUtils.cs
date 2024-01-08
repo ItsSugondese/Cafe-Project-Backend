@@ -1,10 +1,9 @@
-﻿
-
-using BisleriumCafeBackend.constants;
+﻿using BisleriumCafeBackend.constants;
 using BisleriumCafeBackend.enums;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 
-namespace BisleriumCafeBackend.utils
+namespace BisleriumCafeBackend.utils.GenericFile
 {
     public class GenericFileUtils
     {
@@ -167,6 +166,68 @@ namespace BisleriumCafeBackend.utils
                 throw new Exception($"Invalid File Extension {ext}");
             }
         }
+
+        public string CopyFileToServer(string filePath, FilePathMapping moduleName, string fileFromPath)
+        {
+            string fileName = Path.GetFileName(filePath);
+            string date = DateTime.Now.ToString("yyyy-MM-dd");
+
+            string fileFrom = Path.Combine(fileFromPath, fileName);
+            string fileTo = Path.Combine(FilePathConstants.UploadDir, moduleName.GetLocation(), date, fileName);
+
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(fileTo));
+
+                File.Copy(fileFrom, fileTo, true);
+
+                return fileTo;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw new Exception("Failed to copy the file");
+            }
+        }
+
+        public void GetFileFromFilePath(string filePath, HttpResponse response)
+        {
+            try
+            {
+                string fileName = Path.GetFileName(filePath);
+
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    var file = new FileInfo(filePath);
+
+                    if (file.Exists)
+                    {
+                        // Set the response headers
+                        response.Headers.Add("Content-Disposition", $"inline;filename={WebUtility.UrlEncode(fileName)}");
+                        response.Headers.Add("Content-Type", "application/octet-stream"); // You may need to adjust the content type
+                        response.ContentType = "image/jpeg";
+
+
+                        // Write the file content to the response
+                        response.Body.WriteAsync(System.IO.File.ReadAllBytes(file.FullName));
+                    }
+                    else
+                    {
+                        throw new FileNotFoundException("Invalid File Path", filePath);
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid File Path");
+                }
+            }
+            catch (Exception e)
+            {
+                // Handle the exception or log it
+                throw new ApplicationException("Error while processing file request", e);
+            }
+        }
     }
+
 }
 

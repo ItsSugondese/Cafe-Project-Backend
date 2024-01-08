@@ -4,7 +4,7 @@ using BisleriumCafeBackend.Model.TemporaryAttachments;
 using BisleriumCafeBackend.pojo.TemporaryAttachments;
 using BisleriumCafeBackend.Repository.CoffeeRepo;
 using BisleriumCafeBackend.Repository.TemporaryAttachmentsRepo;
-using BisleriumCafeBackend.utils;
+using BisleriumCafeBackend.utils.GenericFile;
 
 namespace BisleriumCafeBackend.Services.TemporaryAttachmentsServices
 {

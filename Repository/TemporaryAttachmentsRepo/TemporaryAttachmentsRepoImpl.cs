@@ -31,6 +31,11 @@ namespace BisleriumCafeBackend.Repository.TemporaryAttachmentsRepo
             }).ToList();
         }
 
+        public TemporaryAttachments? getById(int id)
+        {
+            return GetAll().SingleOrDefault(tempAttachment => tempAttachment.Id == id);
+        }
+
         public TemporaryAttachments Save(TemporaryAttachments temporaryAttachments)
         {
             string filePath = @fileName + ".xlsx";

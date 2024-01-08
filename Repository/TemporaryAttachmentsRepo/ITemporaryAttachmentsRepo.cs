@@ -7,5 +7,6 @@ namespace BisleriumCafeBackend.Repository.TemporaryAttachmentsRepo
         TemporaryAttachments Save(TemporaryAttachments temporaryAttachments);
 
         List<TemporaryAttachments> GetAll();
+        TemporaryAttachments? getById(int id);
     }
 }

@@ -1,17 +1,27 @@
 ﻿using BisleriumCafeBackend.constants;
 using BisleriumCafeBackend.Model.AddIn;
 using BisleriumCafeBackend.Model.Coffee;
+using BisleriumCafeBackend.pojo.coffee;
 using BisleriumCafeBackend.Repository.AddInRepo;
 using BisleriumCafeBackend.Repository.CoffeeRepo;
+using BisleriumCafeBackend.Repository.TemporaryAttachmentsRepo;
+using BisleriumCafeBackend.utils.GenericFile;
+using OfficeOpenXml.Packaging.Ionic.Zip;
 
 namespace BisleriumCafeBackend.Services.CoffeeServices
 {
     public class CoffeeServiceImpl : ICoffeeService
     {
         private readonly ICoffeeRepo _coffeeRepo;
-        public CoffeeServiceImpl(ICoffeeRepo coffeeRepo)
+        private readonly GenericFileUtils genericFileUtils;
+        private readonly ITemporaryAttachmentsRepo temporaryAttachmentsRepo;
+
+
+        public CoffeeServiceImpl(ICoffeeRepo coffeeRepo, ITemporaryAttachmentsRepo temporaryAttachmentsRepo)
         {
             _coffeeRepo = coffeeRepo;
+            this.temporaryAttachmentsRepo = temporaryAttachmentsRepo;
+            genericFileUtils = new GenericFileUtils();
         }
         public void deleteCoffeeById(int id)
         {
@@ -30,11 +40,22 @@ namespace BisleriumCafeBackend.Services.CoffeeServices
             return _coffeeRepo.findById(id);
         }
 
-        public void saveCoffee(Coffee coffee)
+        public void saveCoffee(CoffeeRequest coffeeRequest)
         {
+            Coffee coffee = new Coffee
+            {
+                Name = coffeeRequest.Name,
+                Price = coffeeRequest.Price,
+                Id = coffeeRequest.Id,
+            };
+            errorWhenCoffeeNameAlreadyExist(coffee);
             List<Coffee> coffeeList = _coffeeRepo.getAll();
 
-            errorWhenCoffeeNameAlreadyExist(coffee);
+            if (coffeeRequest.fileId != null)
+            {
+
+                coffee.FilePath = genericFileUtils.CopyFileToServer(temporaryAttachmentsRepo.getById((int)coffeeRequest.fileId).Location, FilePathMapping.COFFEE, FilePathConstants.TempPath);
+            }
             if (coffee.Id == null)
             {
                 if (coffeeList.Count() > 0)
@@ -46,11 +67,12 @@ namespace BisleriumCafeBackend.Services.CoffeeServices
                 {
                     coffee.Id = 1;
                 }
-                    _coffeeRepo.saveCoffee(coffee);
+                
+                     _coffeeRepo.saveCoffee(coffee);
             }
             else
             {
-                errorWhenCoffeeNotExist(coffee.Id ?? 0);
+                errorWhenCoffeeNotExist(coffeeRequest.Id ?? 0);
                 _coffeeRepo.updateCoffee(coffee);
             }
         }
@@ -65,10 +87,35 @@ namespace BisleriumCafeBackend.Services.CoffeeServices
         private void errorWhenCoffeeNameAlreadyExist(Coffee coffee)
         {
             Coffee checkCoffee = _coffeeRepo.findByName(coffee.Name);
-            if (checkCoffee != null && checkCoffee.Id != checkCoffee.Id)
+            if (checkCoffee != null && checkCoffee.Id != coffee.Id)
             {
                 throw new Exception(MessageConstantsMerge.alreadyExist("name", ModuleNameConstants.COFFEE));
             }
+        }
+
+        public Object showCoffeePictureById(HttpResponse response, int id)
+        {
+            try
+            {
+                string photoPath = _coffeeRepo.findById(id)?.FilePath;
+
+                if (photoPath != null)
+                {
+                    //genericFileUtils.GetFileFromFilePath(photoPath, response);
+                    //Byte[] b = System.IO.File.ReadAllBytes(@"E:\\Test.jpg");   // You can use your own method over here.         
+                    //return File(b, "image/jpeg");
+                }
+                else
+                {
+                    throw new InvalidOperationException("Food picture not found");
+                }
+            }
+            catch (Exception e)
+            {
+                // Handle the exception or log it
+                throw new Exception("Error while processing food picture request", e);
+            }
+            return null;
         }
     }
 }
