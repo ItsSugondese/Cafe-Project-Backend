@@ -22,7 +22,7 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
             {
                 Id = Convert.ToInt32(e["Id"]),
                 MemberId = Convert.ToInt32(e["MemberId"]),
-                OrderId = Convert.ToInt32(e["OrderId"])
+                OrderId = Convert.ToInt32(e["OrderId"]),
             }).ToList();
         }
 

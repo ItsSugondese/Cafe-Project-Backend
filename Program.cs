@@ -26,6 +26,7 @@ builder.Services.AddScoped<IOrderService, OrderServiceImpl>();
 builder.Services.AddScoped<ITransactionService, TransactionServiceImpl>();
 builder.Services.AddScoped<IOrderAddInMappingService, OrderAddInMappingServiceImpl>();
 builder.Services.AddScoped<ITemporaryAttachmentsService, TemporaryAttachmentsServiceImpl>();
+builder.Services.AddScoped<ICoffeeRedeemCoupounService, CoffeeRedeemCoupounServiceImpl>();
 
 //Add repo to the container
 builder.Services.AddScoped<IAddInRepo, AddInRepoImpl>();
@@ -35,6 +36,7 @@ builder.Services.AddScoped<IOrderRepo, OrderRepoImpl>();
 builder.Services.AddScoped<ITransactionRepo, TransactionRepoImpl>();
 builder.Services.AddScoped<IOrderAddInMappingRepo, OrderAddInMappingRepoImpl>();
 builder.Services.AddScoped<ITemporaryAttachmentsRepo, TemporaryAttachmentsRepoImpl>();
+builder.Services.AddScoped<ICoffeeRedeemCoupounRepo, CoffeeRedeemCoupounImpl>();
 //builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

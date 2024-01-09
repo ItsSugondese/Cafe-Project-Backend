@@ -14,6 +14,6 @@ namespace BisleriumCafeBackend.Services.CoffeeServices
 
         void deleteCoffeeById(int id);
 
-        Object showCoffeePictureById(HttpResponse response, int id);
+       
     }
 }

@@ -5,10 +5,11 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
     public interface ICoffeeRedeemCoupounRepo
     {
         List<CoffeeRedeemCoupoun> getAll();
-        Order findById(int id);
+        CoffeeRedeemCoupoun findById(Guid id);
+        CoffeeRedeemCoupoun findByMemberId(int id);
 
         void saveCoffeeRedeem(CoffeeRedeemCoupoun crc);
-        void updateCoffeeRedeem(int id);
+        void updateCoffeeRedeem(Guid id);
 
         void deleteCoffeeRedeem(int id);
     }

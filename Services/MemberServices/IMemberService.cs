@@ -13,6 +13,7 @@ namespace BisleriumCafeBackend.Services.MemberServices
         Member? getMemberByContactNumber(string contactNumber);
 
         List<Member> getAllMember();
+        bool toggleMembership(int id);
 
         void deleteMemberById(int id);
     }

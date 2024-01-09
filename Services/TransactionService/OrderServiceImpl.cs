@@ -1,7 +1,9 @@
 ﻿using BisleriumCafeBackend.Model.Coffee;
+using BisleriumCafeBackend.Model.Member;
 using BisleriumCafeBackend.Model.Transaction;
 using BisleriumCafeBackend.pojo.order;
 using BisleriumCafeBackend.Repository.CoffeeRepo;
+using BisleriumCafeBackend.Repository.MemberRepo;
 using BisleriumCafeBackend.Repository.TransactionRepo;
 
 namespace BisleriumCafeBackend.Services.TransactionService
@@ -10,11 +12,13 @@ namespace BisleriumCafeBackend.Services.TransactionService
     {
         private readonly IOrderRepo _orderRepo;
         private readonly IOrderAddInMappingRepo _orderAddInMappingRepo;
+        private readonly IMemberRepo _memberRepo;
 
-        public OrderServiceImpl(IOrderRepo orderRepo, IOrderAddInMappingRepo orderAddInMappingRepo)
+        public OrderServiceImpl(IOrderRepo orderRepo, IOrderAddInMappingRepo orderAddInMappingRepo, IMemberRepo memberRepo)
         {
             _orderRepo = orderRepo;
             _orderAddInMappingRepo = orderAddInMappingRepo;
+            _memberRepo = memberRepo;
         }
         public void deleteOrderById(int id)
         {
@@ -55,8 +59,20 @@ namespace BisleriumCafeBackend.Services.TransactionService
                     Price = requestPojo.Price,
                     RedeemId = requestPojo.RedeemId,
                     WasRedeem = requestPojo.WasRedeem,
-                    HasPaid = false
-                });
+                    HasPaid = false,
+                    Date = DateOnly.FromDateTime(DateTime.Now)
+            });
+
+                if (requestPojo.WasRedeem)
+                {
+
+                    Member member = _memberRepo.findById(requestPojo.MemberId);
+                    member.CoffeeCount = 0;
+                    _memberRepo.updateMember(member);
+                        
+                    }
+                
+
 
                 if (requestPojo.HadAddIn)
                 {

@@ -42,12 +42,22 @@ namespace BisleriumCafeBackend.Services.CoffeeServices
 
         public void saveCoffee(CoffeeRequest coffeeRequest)
         {
-            Coffee coffee = new Coffee
+            Coffee coffee;
+            if (coffeeRequest.Id != null)
             {
-                Name = coffeeRequest.Name,
-                Price = coffeeRequest.Price,
-                Id = coffeeRequest.Id,
-            };
+                coffee = _coffeeRepo.findById((int)coffeeRequest.Id);
+                coffee.Name = coffeeRequest.Name;
+                coffee.Price = coffeeRequest.Price;
+            }
+            else
+            {
+                coffee = new Coffee
+                {
+                    Name = coffeeRequest.Name,
+                    Price = coffeeRequest.Price,
+                    Id = coffeeRequest.Id,
+                };
+            }
             errorWhenCoffeeNameAlreadyExist(coffee);
             List<Coffee> coffeeList = _coffeeRepo.getAll();
 
@@ -93,29 +103,6 @@ namespace BisleriumCafeBackend.Services.CoffeeServices
             }
         }
 
-        public Object showCoffeePictureById(HttpResponse response, int id)
-        {
-            try
-            {
-                string photoPath = _coffeeRepo.findById(id)?.FilePath;
-
-                if (photoPath != null)
-                {
-                    //genericFileUtils.GetFileFromFilePath(photoPath, response);
-                    //Byte[] b = System.IO.File.ReadAllBytes(@"E:\\Test.jpg");   // You can use your own method over here.         
-                    //return File(b, "image/jpeg");
-                }
-                else
-                {
-                    throw new InvalidOperationException("Food picture not found");
-                }
-            }
-            catch (Exception e)
-            {
-                // Handle the exception or log it
-                throw new Exception("Error while processing food picture request", e);
-            }
-            return null;
-        }
+        
     }
 }

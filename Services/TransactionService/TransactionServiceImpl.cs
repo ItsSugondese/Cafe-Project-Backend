@@ -1,4 +1,6 @@
-﻿using BisleriumCafeBackend.Model.Transaction;
+﻿using BisleriumCafeBackend.Model.Member;
+using BisleriumCafeBackend.Model.Transaction;
+using BisleriumCafeBackend.Repository.MemberRepo;
 using BisleriumCafeBackend.Repository.TransactionRepo;
 
 namespace BisleriumCafeBackend.Services.TransactionService
@@ -7,16 +9,28 @@ namespace BisleriumCafeBackend.Services.TransactionService
     {
         private readonly ITransactionRepo _transactionRepo;
         private readonly IOrderRepo _orderRepo;
-        public TransactionServiceImpl(ITransactionRepo transactionRepo, IOrderRepo orderRepo)
+        private readonly IMemberRepo _memberRepo;
+        private readonly ICoffeeRedeemCoupounRepo _coffeeRedeemCoupounRepo;
+        public TransactionServiceImpl(ITransactionRepo transactionRepo, IOrderRepo orderRepo, IMemberRepo memberRepo, ICoffeeRedeemCoupounRepo coffeeRedeemCoupounRepo)
         {
             _transactionRepo = transactionRepo;
             _orderRepo = orderRepo;
+            _memberRepo = memberRepo;
+            _coffeeRedeemCoupounRepo = coffeeRedeemCoupounRepo;
         }
         public void saveTransaction(Transaction transaction)
         {
             Order order = _orderRepo.findById(transaction.OrderId);
             order.HasPaid = true;
             _orderRepo.updateOrder(order);
+
+            Member member = _memberRepo.findById(transaction.MemberId);
+            if (member.IsMember)
+            {
+                member.CoffeeCount = member.CoffeeCount + 1;
+                _memberRepo.updateMember(member);
+            }
+
             List<Transaction> transactionList = _transactionRepo.getAll();
             if (transaction.Id == null)
             {

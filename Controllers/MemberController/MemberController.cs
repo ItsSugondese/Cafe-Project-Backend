@@ -32,6 +32,12 @@ namespace BisleriumCafeBackend.Controllers.MemberController
             return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), _memberService.getAllMember());
         }
 
+        [HttpGet("toggle/{id}")]
+        public Object ToggleMembership(int id)
+        {
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), _memberService.toggleMembership(id));
+        }
+
         // GET api/<MemberController>/5
         [HttpGet("{id}")]
         public Object GetById(int id)

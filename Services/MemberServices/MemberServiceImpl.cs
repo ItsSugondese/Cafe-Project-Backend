@@ -101,5 +101,19 @@ namespace BisleriumCafeBackend.Services.MemberServices
             }
         }
 
+        public bool toggleMembership(int id)
+        {
+            Member member = getSingleMember(id);
+            if (member.IsMember == true)
+            {
+                member.IsMember = false;
+            }else
+            {
+                member.IsMember = true;
+            }
+
+            _memberRepo.updateMember(member);
+            return member.IsMember;
+        }
     }
 }

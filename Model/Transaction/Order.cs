@@ -13,9 +13,6 @@
         public bool HasPaid {  get; set; }
         public int? RedeemId { get; set; }
 
-        public Order()
-        {
-            Date = DateOnly.FromDateTime(DateTime.Now);
-        }
+       
     }
 }
