@@ -3,7 +3,10 @@ using BisleriumCafeBackend.enums;
 using BisleriumCafeBackend.helper;
 using BisleriumCafeBackend.Model.AddIn;
 using BisleriumCafeBackend.Model.User;
+using BisleriumCafeBackend.pojo.coffee;
 using BisleriumCafeBackend.Repository.AddInRepo;
+using BisleriumCafeBackend.Repository.TemporaryAttachmentsRepo;
+using BisleriumCafeBackend.utils.GenericFile;
 using static BisleriumCafeBackend.constants.FileNameEnum;
 
 namespace BisleriumCafeBackend.Services.AddInServices
@@ -11,8 +14,12 @@ namespace BisleriumCafeBackend.Services.AddInServices
     public class AddInServiceImpl : IAddInService
     {
         private readonly IAddInRepo _addInRepo;
-        public AddInServiceImpl(IAddInRepo addInRepo) {
+        private readonly GenericFileUtils genericFileUtils;
+        private readonly ITemporaryAttachmentsRepo temporaryAttachmentsRepo;
+        public AddInServiceImpl(IAddInRepo addInRepo, ITemporaryAttachmentsRepo temporaryAttachmentsRepo) {
             _addInRepo = addInRepo;
+            this.temporaryAttachmentsRepo = temporaryAttachmentsRepo;
+            genericFileUtils = new GenericFileUtils();
         }
 
         public void deleteAddInById(int id)
@@ -21,11 +28,33 @@ namespace BisleriumCafeBackend.Services.AddInServices
             _addInRepo.deleteAddin(id);
         }
 
-        public void saveAddIn( AddIn addIn)
+        public void saveAddIn( CoffeeRequest addInRequest)
         {
-            List<AddIn> addInList = _addInRepo.getAll();
+            AddIn addIn;
+            if (addInRequest.Id != null)
+            {
+                addIn = _addInRepo.findById((int)addInRequest.Id);
+                addIn.Name = addInRequest.Name;
+                addIn.Price = addInRequest.Price;
+            }
+            else
+            {
+                addIn = new AddIn
+                {
+                    Name = addInRequest.Name,
+                    Price = addInRequest.Price,
+                    Id = addInRequest.Id,
+                };
+            }
 
             errorWhenAddInNameAlreadyExist(addIn);
+            List<AddIn> addInList = _addInRepo.getAll();
+            if (addInRequest.fileId != null)
+            {
+
+                addIn.FilePath = genericFileUtils.CopyFileToServer(temporaryAttachmentsRepo.getById((int)addInRequest.fileId).Location, FilePathMapping.COFFEE, FilePathConstants.TempPath);
+            }
+
             if (addIn.Id == null)
             {
                 if (addInList.Count() > 0)

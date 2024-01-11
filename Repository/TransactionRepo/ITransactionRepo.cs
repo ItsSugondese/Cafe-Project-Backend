@@ -1,6 +1,7 @@
 ﻿
 
 using BisleriumCafeBackend.Model.Transaction;
+using BisleriumCafeBackend.pojo.Transaction;
 
 namespace BisleriumCafeBackend.Repository.TransactionRepo
 {
@@ -8,5 +9,7 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
     {
         void saveTransaction(Transaction transaction);
         List<Transaction> getAll();
+
+        List<TransactionResponse> getAllTransactionDetails();
     }
 }

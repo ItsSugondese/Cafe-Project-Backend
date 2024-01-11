@@ -166,5 +166,24 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
                 }
                 ).ToList();
             }
+
+        public OrderResponse getSingleOrderDetails(int id)
+        {
+            Order order = findById(id);
+            
+                    List<string> addInsName = _orderAddInMappingRepo.findByOrderId((int)order.Id).Select(e => _addInRepo.findById(e.AddInId).Name).ToList();
+                    Member member = _memberRepo.findById(order.MemberId);
+            return new OrderResponse
+            {
+                Id = (int)order.Id,
+                Date = order.Date,
+                AddInName = addInsName,
+                CoffeeName = _coffeeRepo.findById(order.CoffeeId).Name,
+                MemberName = member.Name,
+                Price = order.Price,
+                MemberId = (int)member.Id
+            };
+             
         }
+    }
     }

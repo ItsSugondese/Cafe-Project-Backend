@@ -13,6 +13,5 @@
         public bool HasPaid {  get; set; }
         public int? RedeemId { get; set; }
 
-       
     }
 }

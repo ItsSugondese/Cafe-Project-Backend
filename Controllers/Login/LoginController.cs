@@ -38,6 +38,13 @@ namespace BisleriumCafeBackend.Controllers.Login
             return Ok(_loginService.Login(user));
         }
 
+        [HttpPost("change-password")]
+        public Object ChangePassword(User user)
+        {
+            _loginService.updatePassword(user);
+            return Ok(true);
+        }
+
         // PUT api/<Login>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

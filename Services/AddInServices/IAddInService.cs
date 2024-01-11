@@ -1,10 +1,11 @@
 ﻿using BisleriumCafeBackend.Model.AddIn;
+using BisleriumCafeBackend.pojo.coffee;
 
 namespace BisleriumCafeBackend.Services.AddInServices
 {
     public interface IAddInService
     {
-        void saveAddIn(AddIn addIn);
+        void saveAddIn(CoffeeRequest addInRequest);
 
         AddIn getSingleAddin(int id);
 

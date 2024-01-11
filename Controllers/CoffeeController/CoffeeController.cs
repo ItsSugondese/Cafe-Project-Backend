@@ -28,14 +28,12 @@ namespace BisleriumCafeBackend.Controllers.CoffeeController
         }
         
         
-        // GET: api/<CoffeeController>
         [HttpGet]
         public Object Get()
         {
             return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), _coffeeService.getAllCoffee());
         }
 
-        // GET api/<CoffeeController>/5
         [HttpGet("{id}")]
         public Object Get(int id)
         {
@@ -57,7 +55,6 @@ namespace BisleriumCafeBackend.Controllers.CoffeeController
             return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.GET, moduleName), true);
         }
 
-        // POST api/<CoffeeController>
         [HttpPost]
         public Object Post(CoffeeRequest coffee)
         {
@@ -66,8 +63,6 @@ namespace BisleriumCafeBackend.Controllers.CoffeeController
         }
 
         
-
-        // DELETE api/<CoffeeController>/5
         [HttpDelete("{id}")]
         public Object Delete(int id)
         {

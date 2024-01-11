@@ -24,9 +24,17 @@ namespace BisleriumCafeBackend.Controllers.TransactionController
 
         // GET: api/<TransactionController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public Object Get()
         {
-            return new string[] { "value1", "value2" };
+            return SuccessResponse(MessageConstantsMerge.requetMessage(MessageConstants.POST, moduleName), _transactionService.getTransactionDetails());
+        }
+        
+        [HttpGet("doc/pdf")]
+        public Object generatePdf()
+        {
+            _transactionService.transactionDataForPdf();
+            Byte[] b = System.IO.File.ReadAllBytes("output.pdf");   // You can use your own method over here.         
+            return File(b, "application/pdf");
         }
 
         // GET api/<TransactionController>/5

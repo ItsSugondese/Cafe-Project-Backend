@@ -9,6 +9,7 @@ namespace BisleriumCafeBackend.Repository.TransactionRepo
         List<Order> getAll();
 
         List<OrderResponse> getAllOrdersDetails();
+        OrderResponse getSingleOrderDetails(int id);
         Order? findById(int id);
 
         void saveOrder(Order order);

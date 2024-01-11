@@ -31,7 +31,7 @@ namespace BisleriumCafeBackend.constants
         {
             var field = value.GetType().GetField(value.ToString());
             var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute));
-            return attribute == null ? value.ToString() : attribute.Description;
+            return attribute == null ? value.ToString() : "database" + Path.DirectorySeparatorChar.ToString() + attribute.Description;
 
         }
     }
